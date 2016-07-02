@@ -9,20 +9,7 @@ module.exports = function bind(that) {
         throw new TypeError(ERROR_MESSAGE + target);
     }
     var args = slice.call(arguments, 1),
-/*
-    var bound;
-    var binder = function () {                       // ternary
-        return target.apply(                         // get value
-            this instanceof bound ? this : that,     // if constructor bound this scope or other
-            args.concat(slice.call(arguments))       // get arguments
-        );
-    };
 
-    // we do not use separate arguments, we need only the number of
-    boundArgs = Array(Math.max(0, 1 + target.length - args.length)).join('$').split('');
-    // converting an array to string by default separator comma
-    bound = Function('binder', 'return function (' + boundArgs + '){ return binder.apply(this,arguments); }')(binder);
-*/
     // optimize the variable declaration
         bound = Function('binder', 'return function(' +
             Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') +
