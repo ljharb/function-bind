@@ -11,9 +11,7 @@ module.exports = function bind(that) {
     var args = slice.call(arguments, 1),
 
     // optimize the variable declaration
-        bound = Function('binder', 'return function(' +
-            Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') +
-            '){return binder.apply(this,arguments);}')(
+        bound = Function('binder', 'return function(' + Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') + '){return binder.apply(this,arguments);}')(
             function () {
                return target.apply(// get value
                this instanceof bound ? this : that, // if constructor bound this scope or other
