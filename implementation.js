@@ -8,8 +8,8 @@ module.exports = function bind(that) {
     if (typeof target !== 'function' || toStr.call(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
     }
-    var args = slice.call(arguments, 1);
-
+    var args = slice.call(arguments, 1),
+/*
     var bound;
     var binder = function () {                       // ternary
         return target.apply(                         // get value
@@ -22,16 +22,25 @@ module.exports = function bind(that) {
     boundArgs = Array(Math.max(0, 1 + target.length - args.length)).join('$').split('');
     // converting an array to string by default separator comma
     bound = Function('binder', 'return function (' + boundArgs + '){ return binder.apply(this,arguments); }')(binder);
-/*
-    if (target.prototype) {
-        var Empty = function Empty() {};             // get empty function
-        Empty.prototype = target.prototype;          // set function prototype, resulting object
-        bound.prototype = new Empty();               // set object prototype to bound
-        Empty.prototype = null;                      // clean Empty.prototype
-    }
 */
-    // Function does not have a prototype, the object must be recognized as that of the parent
-    // A both instances as at the parent
+    // optimize the variable declaration
+        bound = Function('binder', 'return function(' +
+            Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') +
+            '){return binder.apply(this,arguments);}')(
+            function () {
+               return target.apply(                  // get value
+               this instanceof bound ? this : that,  // if constructor bound this scope or other
+               args.concat(slice.call(arguments)));  // get arguments
+            });
+/*
+    // I wonder! I'm not sure I have a bad english
+    // ECMA-5 15.3.4.5.1 Return the result of calling the [[Call]] internal 
+    // method of target providing boundThis as the this value and providing args 
+    // as the arguments.
+        bound = Function('binder,that,args', 'return function('
+         + Array(Math.max(0, 1 + target.length - args.length)).join('$').split('')
+         + '){return binder.apply(this instanceof binder?this:that,args.concat(Array.prototype.slice.call(arguments)));}')(target, that, args)
+*/
     bound.prototype = target.prototype;
 
     return bound;
