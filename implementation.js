@@ -11,22 +11,40 @@ module.exports = function bind(that) {
     var args = slice.call(arguments, 1);
 
     var bound;
+/*
     var binder = function () {
-        if (this instanceof bound) {
-            var result = target.apply(
-                this,
-                args.concat(slice.call(arguments))
+        if (this instanceof bound) {                 // is constructor bound
+            var result = target.apply(               // get result value
+                this,                                // this scope
+                args.concat(slice.call(arguments))   // get arguments
             );
-            if (Object(result) === result) {
+            if (Object(result) === result) {         // if result is not a primitive
                 return result;
             }
-            return this;
+            return this;                             // or this
         } else {
-            return target.apply(
-                that,
-                args.concat(slice.call(arguments))
+            return target.apply(                     // get value
+                that,                                // another scope
+                args.concat(slice.call(arguments))   // get arguments
             );
         }
+    };
+
+    var binder = function () {                       // equivalently
+        var result;                                  // for a primitive always this scope
+        if (instanceof bound) result = this;         // if constructor bound this scope
+        else result = that;                          // another scope
+        return target.apply(                         // get value
+            result,
+            args.concat(slice.call(arguments))       // get arguments
+        )
+    }
+*/
+    var binder = function () {                       // ternary
+        return target.apply(                         // get value
+            this instanceof bound ? this : that,     // if constructor bound this scope or other
+            args.concat(slice.call(arguments))       // get arguments
+        );
     };
 
     var boundLength = Math.max(0, target.length - args.length);
