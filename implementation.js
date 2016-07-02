@@ -15,14 +15,14 @@ module.exports = function bind(that) {
             Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') +
             '){return binder.apply(this,arguments);}')(
             function () {
-               return target.apply(                  // get value
-               this instanceof bound ? this : that,  // if constructor bound this scope or other
-               args.concat(slice.call(arguments)));  // get arguments
+               return target.apply(// get value
+               this instanceof bound ? this : that, // if constructor bound this scope or other
+               args.concat(slice.call(arguments))); // get arguments
             });
 /*
     // I wonder! I'm not sure I have a bad english
-    // ECMA-5 15.3.4.5.1 Return the result of calling the [[Call]] internal 
-    // method of target providing boundThis as the this value and providing args 
+    // ECMA-5 15.3.4.5.1 Return the result of calling the [[Call]] internal
+    // method of target providing boundThis as the this value and providing args
     // as the arguments.
         bound = Function('binder,that,args', 'return function('
          + Array(Math.max(0, 1 + target.length - args.length)).join('$').split('')
