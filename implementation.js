@@ -17,26 +17,22 @@ module.exports = function bind(that) {
             args.concat(slice.call(arguments))       // get arguments
         );
     };
-/*
-    var boundLength = Math.max(0, target.length - args.length); // function length
-    var boundArgs = [];                              // array of arguments counter
-    for (var i = 0; i < boundLength; i++) {
-        boundArgs.push('$' + i);                     // build string
-    }
 
-    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
-*/
     // we do not use separate arguments, we need only the number of
     boundArgs = Array(Math.max(0, 1 + target.length - args.length)).join('$').split('');
     // converting an array to string by default separator comma
     bound = Function('binder', 'return function (' + boundArgs + '){ return binder.apply(this,arguments); }')(binder);
-
+/*
     if (target.prototype) {
-        var Empty = function Empty() {};
-        Empty.prototype = target.prototype;
-        bound.prototype = new Empty();
-        Empty.prototype = null;
+        var Empty = function Empty() {};             // get empty function
+        Empty.prototype = target.prototype;          // set function prototype, resulting object
+        bound.prototype = new Empty();               // set object prototype to bound
+        Empty.prototype = null;                      // clean Empty.prototype
     }
+*/
+    // Function does not have a prototype, the object must be recognized as that of the parent
+    // A both instances as at the parent
+    bound.prototype = target.prototype;
 
     return bound;
 };
