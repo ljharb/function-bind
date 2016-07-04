@@ -4,6 +4,7 @@ var toStr = Object.prototype.toString;
 var funcType = '[object Function]';
 
 module.exports = function bind(that) {
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1] }] */
     var target = this;
     if (typeof target !== 'function' || toStr.call(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
