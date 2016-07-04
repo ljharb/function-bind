@@ -4,6 +4,7 @@ var toStr = Object.prototype.toString;
 var funcType = '[object Function]';
 
 module.exports = function bind(that) {
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1] }] */
     var target = this;
     if (typeof target !== 'function' || toStr.call(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
@@ -13,9 +14,9 @@ module.exports = function bind(that) {
     // optimize the variable declaration
         bound = Function('binder', 'return function(' + Array(Math.max(0, 1 + target.length - args.length)).join('$').split('') + '){return binder.apply(this,arguments);}')(
             function () {
-               return target.apply(// get value
-               this instanceof bound ? this : that, // if constructor bound this scope or other
-               args.concat(slice.call(arguments))); // get arguments
+                return target.apply(// get value
+                this instanceof bound ? this : that, // if constructor bound this scope or other
+                args.concat(slice.call(arguments))); // get arguments
             });
 /*
     // I wonder! I'm not sure I have a bad english
